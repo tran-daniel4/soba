@@ -4,6 +4,7 @@ import com.example.soba.entity.User;
 import com.example.soba.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,5 +28,17 @@ public class UserController {
         }
 
     }
-    // requestparam vs requestbody?
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody String username, @RequestBody String password) {
+        try {
+            User loggingIn = userService.login(username, password);
+            return ResponseEntity.ok(loggingIn);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+
 }

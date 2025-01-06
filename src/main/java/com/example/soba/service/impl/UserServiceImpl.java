@@ -5,9 +5,11 @@ import com.example.soba.repository.UserRepository;
 import com.example.soba.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
-
+@Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -20,15 +22,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User signUp(User user) {
-        if (userRepository.usernameExists(user.getUsername())) {
+        if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Username is already taken");
-        } else if (userRepository.emailExists(user.getEmail())) {
+        } else if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Email is already in use");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
-    // why do we get User here instead of String username, etc.. why do we save only password
 
     @Override
     public User login(String username, String password) {
@@ -46,13 +47,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean usernameExists(String username) {
-        return userRepository.usernameExists(username);
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 
     @Override
-    public boolean emailExists(String email) {
-        return userRepository.emailExists(email);
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
-    // how does the flow go from here to userrepo?
+
 }
