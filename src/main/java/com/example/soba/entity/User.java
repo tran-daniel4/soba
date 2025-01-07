@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "Users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
