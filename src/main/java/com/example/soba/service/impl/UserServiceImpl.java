@@ -32,12 +32,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(String username, String password) {
-        Optional<User> userOptional = userRepository.findByUsername(username);
+    public User login(User user) {
+        Optional<User> userOptional = userRepository.findByUsername(user.getUsername());
         if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                return user;
+            User foundUser = userOptional.get();
+            if (passwordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
+                return foundUser;
             } else {
                 throw new RuntimeException("Invalid password");
             }

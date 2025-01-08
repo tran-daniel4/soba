@@ -29,9 +29,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody String username, @RequestBody String password) {
+    public ResponseEntity<?> login(@RequestBody User user) {
         try {
-            User loggingIn = userService.login(username, password);
+            User loggingIn = userService.login(user);
             return ResponseEntity.ok(loggingIn);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
