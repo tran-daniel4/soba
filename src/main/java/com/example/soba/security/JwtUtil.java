@@ -1,9 +1,10 @@
-package com.example.soba.util;
+package com.example.soba.security;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.*;
 import com.nimbusds.jwt.*;
 
+import java.text.ParseException;
 import java.util.Date;
 
 public class JwtUtil {
@@ -35,14 +36,18 @@ public class JwtUtil {
         }
     }
 
+    public static String extractUserFromToken(String token) {
+        validateToken(token);
+    }
+
     // Validate and parse a JWT
     public static String validateToken(String token) {
         try {
-            JWSObject jwsObject = JWSObject.parse(token);
+            SignedJWT signedJWT = SignedJWT.parse(token);
             JWSVerifier verifier = new MACVerifier(SECRET);
 
-            if (jwsObject.verify(verifier)) {
-                JWTClaimsSet claims = JWTClaimsSet.parse(jwsObject.getPayload().toJSONObject());
+            if (signedJWT.verify(verifier)) {
+                JWTClaimsSet claims = JWTClaimsSet.parse(signedJWT.getPayload().toJSONObject());
                 if (new Date().before(claims.getExpirationTime())) {
                     return claims.getSubject(); // Returns the username
                 } else {
